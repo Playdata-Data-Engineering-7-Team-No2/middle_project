@@ -1,0 +1,45 @@
+[현재 날씨]
+current.dt : 시간
+current.temp : 온도 
+current.feels_like : 체감 온도 
+current.humidity : 습도
+current.uvi : 자외선 지수
+current.wind_speed : 풍속
+current.wind_deg : 풍향
+current.weather.main : 날씨 정보 (맑음, 비, 흐림, 눈 등.)
+current.weather.description :세세한 날씨 정보
+current.weather.icon : 날씨 아이콘
+
+[시간 단위]
+hourly.dt : 시간
+hourly.temp : 온도
+hourly.humidity : 습도
+hourly.uvi : 자외선
+hourly.wind_speed : 풍속
+hourly.wind_deg : 풍향
+hourly.pop : 강수확률
+hourly.weather.main : 날씨 정보
+hourly.weather.description : 상세한 날씨 정보
+hourly.weather.icon : 날씨 아이콘
+
+[일별]
+daily.dt : 일별
+daily.sunrise : 일출시간
+daily.sunset : 일몰시간
+daily.moonrise : 월출시간
+daily.moonset : 월몰시간
+daily.temp.morn : 아침 온도
+daily.temp.eve : 저녁 온도
+daily.temp.min : 최저 온도
+daily.temp.max : 최고 온도
+daily.feels_like.morn : 아침 체감 온도
+daily.feels_like.eve : 저녁 체감 온도
+daily.humidity : 습도
+daily.pop : 강수확률
+daily.weather.main : 날씨 정보
+daily.weather.description : 상세한 날씨 정보
+daily.weather.icon : 날씨 아이콘
+
+
+* 온도 (켈빈 단위에서 화씨 단위로 변환이 필요)
+* 모든 값에 대한 정보 : https://openweathermap.org/api/one-call-api
