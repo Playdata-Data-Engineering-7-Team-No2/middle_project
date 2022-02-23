@@ -1,11 +1,13 @@
-## import 
-from bokeh.io import output_file, show
-from bokeh.models import ColumnDataSource, GMapOptions
-from bokeh.plotting import gmap
-import pandas as pd 
-import os 
+# google Map 시각화 
 
-def plot(lat, lng, df,zoom=10, map_type='roadmap'):
+def mapPlot(lat, lng, df,zoom=10, map_type='roadmap'):
+
+    from bokeh.io import output_file, show
+    from bokeh.models import ColumnDataSource, GMapOptions
+    from bokeh.plotting import gmap
+    import pandas as pd 
+    import os 
+
 
     os.environ["GOOGLE_API_KEY"] = 'AIzaSyCHqZYVSJau7_qVmDdAtG5BY3v7sRa4eC0' # google api key  
     api_key = os.environ['GOOGLE_API_KEY']
@@ -38,19 +40,19 @@ def plot(lat, lng, df,zoom=10, map_type='roadmap'):
                 <span style="font-size: 15px; color: #966;">@humidity %</span>
             </div>
             <div>
-                <span style="font-size: 17px; font-weight: bold;">자외선</span>
+                <span style="font-size: 17px; font-weight: bold;">자외선 지수</span>
                 <span style="font-size: 15px; color: #966;">@uvi</span>
             </div>
             <div>
                 <span style="font-size: 17px; font-weight: bold;">바람</span>
-                <span style="font-size: 15px; color: #966;">@wind_deg @wind_speed{0.00} m/s</span>
+                <span style="font-size: 15px; color: #966;">@wind{0.00} m/s</span>
             </div>   
             <div>
                 <span style="font-size: 17px; font-weight: bold;">날씨</span>
                 <span style="font-size: 15px; color: #966;">@weather</span>
             </div>  
             <div>
-                <span style="font-size: 17px; font-weight: bold;">description</span>
+                <span style="font-size: 17px; font-weight: bold;">상태</span>
                 <span style="font-size: 15px; color: #966;">@description</span>
             </div>                                        
         </div>
@@ -60,6 +62,7 @@ def plot(lat, lng, df,zoom=10, map_type='roadmap'):
 
     source = ColumnDataSource(df)
 
+    
     for _,col in zip(range(3),["yellow","blue","purple"]):
         p.circle(x = 'lon', y = 'lat', size=10, alpha=0.8,  source=source, legend_label=col, color=col)
     # p.circle(x = 'lon', y = 'lat', size=10, alpha=0.5,  color = "yellow",source=source)
@@ -67,43 +70,115 @@ def plot(lat, lng, df,zoom=10, map_type='roadmap'):
     p.legend.location = "top_right"
     p.legend.orientation = "horizontal"
     p.legend.click_policy="hide"
-    show(p)
+
     return p
 
+# 일별 테이블 데이터 시각화 
 
+def dailyTable(dailyDf,width=1200, height=800):
+
+    from datetime import date
+    from random import randint
+
+    from bokeh.io import output_file, show
+    from bokeh.layouts import widgetbox
+    from bokeh.models import ColumnDataSource
+    from bokeh.models.widgets import DataTable, DateFormatter, TableColumn
+
+    dailyDf["datetime"] = pd.to_datetime(dailyDf["datetime"],format="%Y-%m-%d", errors = 'coerce')     # datetime 형식으로 변경 
+
+    source = ColumnDataSource(dailyDf)
+    columns = [
+            TableColumn(field="datetime", title="시간", formatter=DateFormatter(format="%Y-%m-%d")),
+            TableColumn(field="name", title="지명"),
+            TableColumn(field="temp", title="온도 (˚C)"),
+            TableColumn(field="humidity", title="습도 (%)"),
+            TableColumn(field="precipitation_probability", title="강수확률 (%)"),
+            TableColumn(field="uvi", title="자외선 지수"),
+            TableColumn(field="wind", title="바람 (m/s)"),
+            TableColumn(field="weather", title="날씨"),
+        ]
+
+    data_table = DataTable(source=source, columns=columns,width=width, height=height)
+
+    return widgetbox(data_table)
+
+# 시간별 테이블 데이터 시각화 
+
+def hourlyTable(hourlyDf,width=1200, height=800):
+
+    from datetime import date
+    from random import randint
+
+    from bokeh.io import output_file, show
+    from bokeh.layouts import widgetbox
+    from bokeh.models import ColumnDataSource
+    from bokeh.models.widgets import DataTable, DateFormatter, TableColumn
+
+    hourlyDf["datetime"] = pd.to_datetime(hourlyDf["datetime"],format="%Y-%m-%d %H:%M:%S", errors = 'coerce')     # datetime 형식으로 변경 
+
+    source = ColumnDataSource(hourlyDf)
+    columns = [
+            TableColumn(field="datetime", title="시간", formatter=DateFormatter(format="%Y-%m-%d %H:%M:%S")),
+            TableColumn(field="name", title="지명"),
+            TableColumn(field="temp", title="온도 (˚C)"),
+            TableColumn(field="humidity", title="습도 (%)"),
+            TableColumn(field="precipitation_probability", title="강수확률 (%)"),
+            TableColumn(field="uvi", title="자외선 지수"),
+            TableColumn(field="wind", title="바람 (m/s)"),
+            TableColumn(field="weather", title="날씨"),
+        ]
+
+    data_table = DataTable(source=source, columns=columns,width=width, height=height)
+
+    return widgetbox(data_table)
+
+
+# mysql Connection 
+def mysqlConn(host="220.78.231.223", port=3306, user="jueun", passwd="jueun", db="weather",):    
+    import pymysql
+    import logging
+
+    try:
+        conn_db = pymysql.connect(host=host, port=port, user=user, passwd=passwd, db=db, charset="utf8")
+        return conn_db
+
+    except Exception as ex:
+        logging.error("DB Connection Issue : {}".format(ex))
+    
 
 def main():
+    from bokeh.io import show
+    import pandas as pd 
 
-    # txt 데이터 - 위도, 경도, 지명 
-    lat, lon , city = [], [], []
+    # DB Connection
+    conn_db = mysqlConn(host="220.78.231.223", port=3306, user="jueun", passwd="jueun", db="weather")
 
-    with open("./jeju.txt", "r",encoding='UTF8') as f:
-        lines = f.readlines()
-
-        for l in lines:
-            cit, la, lo = l.strip().split(",")
-            lat.append(float(la))
-            lon.append(float(lo))
-            city.append(str(cit))
-            
-    tmpDf = pd.DataFrame({"lat":lat, "lon":lon, "city":city})
-    tmpDf = tmpDf.sort_values(by=['city'],axis=0) # name 기준 sort 
-    tmpDf = tmpDf.reset_index(drop=True) # 인덱스 초기화 
-
-    # csv 데이터 - 지명, 온도, 습도.. (위도, 경도 존재 x)
-    df = pd.read_csv('weather.csv', encoding='utf-8')
-    df = df.sort_values(by=["name"],axis=0)
-    df = df.reset_index(drop=True) # 인덱스 초기화 
-
-    # csv 데이터와 txt 데이터 인덱스 기준 concat 
-    jejuSample = pd.concat([df,tmpDf], axis = 1) 
-
-    # print(jejuSample.head())
-
+    # 지도 데이터 
+    sql = "select * from weather.current_weather;" 
+    mapDf = pd.read_sql_query(sql,conn_db)
     lat , lon = 33.4,126.6 # 제주도 중앙 경도 위도 
-    p = plot(lat, lon, jejuSample, map_type='roadmap', zoom=9)
+    gmPlot = mapPlot(lat, lon, mapDf, map_type='roadmap', zoom=9)
+    show(gmPlot)
 
-    return p
+    # 일별 데이터 
+    sql = "select * from weather.daily_weather;"
+    dailyDf = pd.read_sql_query(sql,conn_db)
+    dailyPlot = dailyTable(dailyDf,width=1200, height=800) 
+    show(dailyPlot)
+
+
+    # 시간별 데이터 
+    sql = "select * from weather.hourly_weather;"
+    hourlyDf = pd.read_sql_query(sql,conn_db)
+    hourlyPlot = hourlyTable(hourlyDf,width=1200, height=800)
+    show(hourlyPlot)
+    
+    conn_db.close()
+    
+    return gmPlot, dailyPlot, hourlyPlot
+
+
 
 if __name__ == "__main__":
 
