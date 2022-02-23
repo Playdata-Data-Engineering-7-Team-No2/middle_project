@@ -1,0 +1,13 @@
+temp,feels_like,humidity,uvi,wind_speed,wind_deg,weather,weather_icon,description,name
+5, 2, 43, low, 4.93, NNW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 남원읍
+5, 0, 51, low, 8.03, NNW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 대정읍
+5, 0, 48, low, 7.11, NNW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 표선면
+4, -1, 52, low, 7.8, NW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 구좌읍
+4, -1, 53, low, 8.84, NW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 성산읍
+4, -1, 49, low, 6.97, NNW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 안덕면
+4, -1, 52, low, 6.59, NNW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 애월읍
+4, -1, 52, low, 6.73, NW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 조천읍
+4, -1, 52, low, 7.69, NNW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 한경면
+4, -1, 52, low, 7.23, NNW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 한림읍
+3, -1, 47, low, 5.61, NNW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 서귀포시
+3, -1, 49, low, 6.69, NNW, 온흐림, https://openweathermap.org/img/wn/04d@4x.png, Test, 제주시
